@@ -75,7 +75,12 @@ export default function QuizPage() {
         console.log(`Generated quiz with ${quiz.length} questions`);
         
         if (quiz.length === 0) {
-          setError("No questions found. Please try again or contact support.");
+          // Check if it's a banking exam with no questions
+          if (examType === "Banking_Exam") {
+            setError("No banking questions found. The banking question bank appears to only contain sample/placeholder questions. Please ensure you have real banking questions in your JSON file with actual question text and answers (not 'Correct Answer').");
+          } else {
+            setError("No questions found. Please try again or contact support.");
+          }
           toast.error("No questions available for this topic/subject.");
         } else {
           setQuestions(quiz);

@@ -44,6 +44,9 @@ function parseSSCQuestions(): Question[] {
     return [];
   }
 
+  let totalQuestions = 0;
+  let skippedCount = 0;
+
   if (sscData.SSC_CGL) {
     Object.keys(sscData.SSC_CGL).forEach((subject) => {
       const subjectData = sscData.SSC_CGL[subject];
@@ -127,6 +130,8 @@ function parseSSCQuestions(): Question[] {
 function parseBankingQuestions(): Question[] {
   const questions: Question[] = [];
   let bankingData: any;
+  let totalQuestions = 0;
+  let skippedCount = 0;
   
   try {
     bankingData = bankingQuestions as any;
@@ -147,8 +152,10 @@ function parseBankingQuestions(): Question[] {
           const topicQuestions = subjectData[topic];
           if (Array.isArray(topicQuestions)) {
             topicQuestions.forEach((q: any, index: number) => {
+              totalQuestions++;
               // Skip sample/placeholder questions
               if (!q.question || q.question.toLowerCase().includes("sample question")) {
+                skippedCount++;
                 return;
               }
               
@@ -227,6 +234,12 @@ function parseBankingQuestions(): Question[] {
     });
   }
 
+  console.log(`Banking questions parsing: ${totalQuestions} total, ${questions.length} parsed, ${skippedCount} skipped (sample/placeholder)`);
+  
+  if (questions.length === 0 && totalQuestions > 0) {
+    console.warn(`⚠️ All ${totalQuestions} banking questions are sample/placeholder questions and were filtered out. The banking JSON file needs real questions with actual question text and answers (not "Correct Answer").`);
+  }
+  
   return questions;
 }
 
