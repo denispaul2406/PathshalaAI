@@ -2,6 +2,14 @@ import sscQuestions from "@/../data/ssc_cgl_question_bank.json";
 import bankingQuestions from "@/../data/banking_exam_question_bank_full_5_sections.json";
 import type { Question, Difficulty, ExamType, AdaptiveQuizConfig } from "@/types/question";
 
+// Log JSON imports for debugging
+console.log("Question JSON files loaded:", {
+  sscQuestions: sscQuestions ? "loaded" : "failed",
+  bankingQuestions: bankingQuestions ? "loaded" : "failed",
+  sscType: typeof sscQuestions,
+  bankingType: typeof bankingQuestions,
+});
+
 // Normalize difficulty levels
 const normalizeDifficulty = (difficulty: string): Difficulty => {
   if (difficulty === "beginner" || difficulty === "easy") return "beginner";
@@ -23,7 +31,18 @@ function shuffle<T>(array: T[]): T[] {
 // Parse and flatten questions from JSON structure
 function parseSSCQuestions(): Question[] {
   const questions: Question[] = [];
-  const sscData = sscQuestions as any;
+  let sscData: any;
+  
+  try {
+    sscData = sscQuestions as any;
+    if (!sscData) {
+      console.error("SSC questions data is null or undefined");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error loading SSC questions:", error);
+    return [];
+  }
 
   if (sscData.SSC_CGL) {
     Object.keys(sscData.SSC_CGL).forEach((subject) => {
@@ -107,7 +126,18 @@ function parseSSCQuestions(): Question[] {
 
 function parseBankingQuestions(): Question[] {
   const questions: Question[] = [];
-  const bankingData = bankingQuestions as any;
+  let bankingData: any;
+  
+  try {
+    bankingData = bankingQuestions as any;
+    if (!bankingData) {
+      console.error("Banking questions data is null or undefined");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error loading Banking questions:", error);
+    return [];
+  }
 
   if (bankingData.Banking_Exam) {
     Object.keys(bankingData.Banking_Exam).forEach((subject) => {
@@ -203,17 +233,25 @@ function parseBankingQuestions(): Question[] {
 let cachedQuestions: Question[] | null = null;
 
 export function getAllQuestions(examType?: ExamType): Question[] {
-  if (!cachedQuestions) {
-    const ssc = parseSSCQuestions();
-    const banking = parseBankingQuestions();
-    cachedQuestions = [...ssc, ...banking];
-  }
+  try {
+    if (!cachedQuestions) {
+      const ssc = parseSSCQuestions();
+      const banking = parseBankingQuestions();
+      cachedQuestions = [...ssc, ...banking];
+      console.log(`Loaded ${ssc.length} SSC questions and ${banking.length} Banking questions. Total: ${cachedQuestions.length}`);
+    }
 
-  if (examType) {
-    return cachedQuestions.filter((q) => q.examType === examType);
-  }
+    if (examType) {
+      const filtered = cachedQuestions.filter((q) => q.examType === examType);
+      console.log(`Filtered ${filtered.length} questions for exam type: ${examType}`);
+      return filtered;
+    }
 
-  return cachedQuestions;
+    return cachedQuestions;
+  } catch (error) {
+    console.error("Error loading questions:", error);
+    return [];
+  }
 }
 
 export function getQuestionsBySubject(
@@ -244,30 +282,45 @@ export function generateAdaptiveQuiz(
   },
   questionPool?: Question[]
 ): Question[] {
-  const allQuestions = questionPool || getAllQuestions(examType);
-  const beginnerCount = Math.round(
-    (config.totalQuestions * config.beginner) / 100
-  );
-  const intermediateCount = Math.round(
-    (config.totalQuestions * config.intermediate) / 100
-  );
-  const advancedCount =
-    config.totalQuestions - beginnerCount - intermediateCount;
+  try {
+    const allQuestions = questionPool || getAllQuestions(examType);
+    
+    if (allQuestions.length === 0) {
+      console.warn(`No questions available for exam type: ${examType}`);
+      return [];
+    }
+    
+    const beginnerCount = Math.round(
+      (config.totalQuestions * config.beginner) / 100
+    );
+    const intermediateCount = Math.round(
+      (config.totalQuestions * config.intermediate) / 100
+    );
+    const advancedCount =
+      config.totalQuestions - beginnerCount - intermediateCount;
 
-  const beginner = shuffle(
-    allQuestions.filter((q) => q.difficulty === "beginner")
-  ).slice(0, beginnerCount);
-  const intermediate = shuffle(
-    allQuestions.filter((q) => q.difficulty === "intermediate")
-  ).slice(0, intermediateCount);
-  const advanced = shuffle(
-    allQuestions.filter((q) => q.difficulty === "advanced")
-  ).slice(0, advancedCount);
+    const beginner = shuffle(
+      allQuestions.filter((q) => q.difficulty === "beginner")
+    ).slice(0, beginnerCount);
+    const intermediate = shuffle(
+      allQuestions.filter((q) => q.difficulty === "intermediate")
+    ).slice(0, intermediateCount);
+    const advanced = shuffle(
+      allQuestions.filter((q) => q.difficulty === "advanced")
+    ).slice(0, advancedCount);
 
-  return shuffle([...beginner, ...intermediate, ...advanced]).slice(
-    0,
-    config.totalQuestions
-  );
+    const quiz = shuffle([...beginner, ...intermediate, ...advanced]).slice(
+      0,
+      config.totalQuestions
+    );
+    
+    console.log(`Generated adaptive quiz: ${quiz.length} questions (${beginner.length} beginner, ${intermediate.length} intermediate, ${advanced.length} advanced)`);
+    
+    return quiz;
+  } catch (error) {
+    console.error("Error generating adaptive quiz:", error);
+    return [];
+  }
 }
 
 export function getRandomQuestions(

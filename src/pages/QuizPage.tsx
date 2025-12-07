@@ -25,6 +25,8 @@ export default function QuizPage() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [results, setResults] = useState<QuizResult[]>([]);
   const [startTime] = useState(Date.now());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -36,34 +38,55 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (examType) {
-      let quiz: Question[];
-      if (subject) {
-        // Filter by subject
-        const subjectQuestions = getQuestionsBySubject(examType, decodeURIComponent(subject));
-        quiz = generateAdaptiveQuiz(examType, {
-          beginner: 40,
-          intermediate: 40,
-          advanced: 20,
-          totalQuestions: 10,
-        }, subjectQuestions);
-      } else if (topic) {
-        // Filter by topic
-        const topicQuestions = getQuestionsByTopic(examType, decodeURIComponent(topic));
-        quiz = generateAdaptiveQuiz(examType, {
-          beginner: 40,
-          intermediate: 40,
-          advanced: 20,
-          totalQuestions: 10,
-        }, topicQuestions);
-      } else {
-        quiz = generateAdaptiveQuiz(examType, {
-          beginner: 40,
-          intermediate: 40,
-          advanced: 20,
-          totalQuestions: 10,
-        });
+      try {
+        setLoading(true);
+        setError(null);
+        
+        let quiz: Question[];
+        if (subject) {
+          // Filter by subject
+          const subjectQuestions = getQuestionsBySubject(examType, decodeURIComponent(subject));
+          console.log(`Loaded ${subjectQuestions.length} questions for subject: ${subject}`);
+          quiz = generateAdaptiveQuiz(examType, {
+            beginner: 40,
+            intermediate: 40,
+            advanced: 20,
+            totalQuestions: 10,
+          }, subjectQuestions);
+        } else if (topic) {
+          // Filter by topic
+          const topicQuestions = getQuestionsByTopic(examType, decodeURIComponent(topic));
+          console.log(`Loaded ${topicQuestions.length} questions for topic: ${topic}`);
+          quiz = generateAdaptiveQuiz(examType, {
+            beginner: 40,
+            intermediate: 40,
+            advanced: 20,
+            totalQuestions: 10,
+          }, topicQuestions);
+        } else {
+          quiz = generateAdaptiveQuiz(examType, {
+            beginner: 40,
+            intermediate: 40,
+            advanced: 20,
+            totalQuestions: 10,
+          });
+        }
+        
+        console.log(`Generated quiz with ${quiz.length} questions`);
+        
+        if (quiz.length === 0) {
+          setError("No questions found. Please try again or contact support.");
+          toast.error("No questions available for this topic/subject.");
+        } else {
+          setQuestions(quiz);
+        }
+      } catch (err) {
+        console.error("Error loading questions:", err);
+        setError("Failed to load questions. Please refresh the page or try again later.");
+        toast.error("Failed to load questions. Please try again.");
+      } finally {
+        setLoading(false);
       }
-      setQuestions(quiz);
     } else {
       navigate("/dashboard");
     }
@@ -174,13 +197,49 @@ export default function QuizPage() {
     }
   };
 
-  if (questions.length === 0) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-muted-foreground">{t("common.loading")}</p>
         </div>
+      </div>
+    );
+  }
+
+  if (error || questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-hero flex items-center justify-center pb-20 md:pb-0">
+        <Header />
+        <main className="container py-6 flex-1 flex items-center justify-center">
+          <Card variant="elevated" className="max-w-md w-full p-6 text-center">
+            <XCircle className="w-16 h-16 mx-auto mb-4 text-destructive" />
+            <h1 className="text-xl font-bold text-foreground mb-2">Error Loading Questions</h1>
+            <p className="text-muted-foreground mb-6">
+              {error || "No questions available. Please try again later."}
+            </p>
+            <div className="space-y-2">
+              <Button
+                variant="hero"
+                size="lg"
+                className="w-full"
+                onClick={() => window.location.reload()}
+              >
+                Refresh Page
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full"
+                onClick={() => navigate("/dashboard")}
+              >
+                Go to Dashboard
+              </Button>
+            </div>
+          </Card>
+        </main>
+        <BottomNav />
       </div>
     );
   }
