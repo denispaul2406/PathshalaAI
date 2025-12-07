@@ -1,0 +1,160 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "continue": "Continue",
+    "skip": "Skip",
+    "back": "Back",
+    "done": "Done"
+  },
+  "onboarding": {
+    "splash": {
+      "title": "Pathshala Coach",
+      "subtitle": "Made for Bharat",
+      "tagline": "Your Preparation, Your Language"
+    },
+    "language": {
+      "title": "Choose Your Language",
+      "subtitle": "आपनी भाषा चुनें"
+    },
+    "goal": {
+      "title": "What's Your Goal?",
+      "subtitle": "Select your target exam",
+      "ssc": "SSC CGL",
+      "banking": "Banking (IBPS/SBI)",
+      "examYear": "Exam Year",
+      "dataSaver": "Enable Data Saver Mode",
+      "dataSaverDesc": "Reduces data usage by disabling auto-play and loading compressed content"
+    },
+    "diagnostic": {
+      "title": "Let's Check Your Level",
+      "subtitle": "This will help us personalize your learning path",
+      "start": "Start Test",
+      "question": "Question",
+      "of": "of",
+      "timeLeft": "Time Left",
+      "submit": "Submit Test",
+      "results": "Your Results",
+      "level": "Your Level",
+      "warrior": "Warrior",
+      "champion": "Champion",
+      "master": "Master"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "loginWithGoogle": "Continue with Google",
+    "or": "OR",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUpHere": "Sign up here",
+    "loginHere": "Login here"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "dailyGoal": "Daily Goal",
+    "tasksCompleted": "tasks completed",
+    "todayMix": "Today's Daily Mix",
+    "weeklyGoal": "Weekly Goal",
+    "yourPath": "Your Path"
+  },
+  "quiz": {
+    "start": "Start Quiz",
+    "question": "Question",
+    "of": "of",
+    "timer": "Time",
+    "submit": "Submit Quiz",
+    "previous": "Previous",
+    "next": "Next Question",
+    "results": "Quiz Results",
+    "yourLevel": "Your Level",
+    "result": "Quiz Result",
+    "score": "Score",
+    "level": "Level",
+    "avgTime": "Avg Time",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "review": "Review Answers",
+    "retry": "Retry Quiz",
+    "retake": "Retake Quiz",
+    "continueToDashboard": "Continue to Dashboard",
+    "warriorMessage": "Keep going! We'll help you improve step by step.",
+    "championMessage": "Great start! Let's build on your strengths.",
+    "masterMessage": "Excellent! You're ready for advanced challenges."
+  },
+  "ai": {
+    "sarthi": {
+      "name": "AI Sarthi",
+      "subtitle": "Your Study Buddy",
+      "placeholder": "Ask your question...",
+      "send": "Send",
+      "typing": "AI is typing...",
+      "greeting": "Hello! 🙏 I'm your AI Sarthi. How can I help you today?"
+    },
+    "mirror": {
+      "title": "AI Interview Coach",
+      "start": "Start Recording",
+      "stop": "Stop Recording",
+      "analyzing": "Analyzing...",
+      "eyeContact": "Eye Contact",
+      "speakingPace": "Speaking Pace",
+      "fillerWords": "Filler Words",
+      "fluencyScore": "Fluency Score"
+    }
+  },
+  "progress": {
+    "title": "Progress",
+    "overview": "Overview",
+    "weekly": "This Week",
+    "monthly": "This Month",
+    "accuracy": "Accuracy",
+    "streak": "Day Streak",
+    "xp": "Total XP",
+    "rank": "Rank",
+    "weakAreas": "Weak Areas",
+    "strongAreas": "Strong Areas"
+  },
+  "videos": {
+    "conceptReels": "Concept Reels",
+    "watch": "Watch",
+    "duration": "Duration",
+    "topic": "Topic",
+    "download": "Download for Offline"
+  },
+  "flashcards": {
+    "title": "Flashcards",
+    "review": "Review Now",
+    "due": "Due Today",
+    "mastered": "Mastered",
+    "know": "I Know This",
+    "dontKnow": "Don't Know",
+    "flip": "Tap to Flip"
+  },
+  "profile": {
+    "title": "Profile",
+    "edit": "Edit Profile",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "language": "Language",
+    "dataSaver": "Data Saver Mode",
+    "offline": "Offline Content",
+    "logout": "Logout"
+  }
+}
+
