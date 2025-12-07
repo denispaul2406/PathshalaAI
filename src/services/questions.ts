@@ -1,6 +1,7 @@
 import sscQuestions from "@/../data/ssc_cgl_question_bank.json";
 import bankingQuestions from "@/../data/banking_exam_question_bank_full_5_sections.json";
 import type { Question, Difficulty, ExamType, AdaptiveQuizConfig } from "@/types/question";
+import { hardcodedSSCQuestions, hardcodedBankingQuestions } from "./hardcodedQuestions";
 
 // Log JSON imports for debugging
 console.log("Question JSON files loaded:", {
@@ -250,8 +251,21 @@ export function getAllQuestions(examType?: ExamType): Question[] {
     if (!cachedQuestions) {
       const ssc = parseSSCQuestions();
       const banking = parseBankingQuestions();
-      cachedQuestions = [...ssc, ...banking];
-      console.log(`Loaded ${ssc.length} SSC questions and ${banking.length} Banking questions. Total: ${cachedQuestions.length}`);
+      
+      // Use hardcoded questions as fallback if JSON parsing returns no questions
+      const sscFinal = ssc.length > 0 ? ssc : hardcodedSSCQuestions;
+      const bankingFinal = banking.length > 0 ? banking : hardcodedBankingQuestions;
+      
+      cachedQuestions = [...sscFinal, ...bankingFinal];
+      
+      if (ssc.length === 0) {
+        console.log(`Using ${hardcodedSSCQuestions.length} hardcoded SSC questions (JSON had 0 valid questions)`);
+      }
+      if (banking.length === 0) {
+        console.log(`Using ${hardcodedBankingQuestions.length} hardcoded Banking questions (JSON had 0 valid questions)`);
+      }
+      
+      console.log(`Loaded ${sscFinal.length} SSC questions and ${bankingFinal.length} Banking questions. Total: ${cachedQuestions.length}`);
     }
 
     if (examType) {
@@ -263,7 +277,13 @@ export function getAllQuestions(examType?: ExamType): Question[] {
     return cachedQuestions;
   } catch (error) {
     console.error("Error loading questions:", error);
-    return [];
+    // Return hardcoded questions as fallback on error
+    if (examType === "SSC_CGL") {
+      return hardcodedSSCQuestions;
+    } else if (examType === "Banking_Exam") {
+      return hardcodedBankingQuestions;
+    }
+    return [...hardcodedSSCQuestions, ...hardcodedBankingQuestions];
   }
 }
 
