@@ -22,3 +22,43 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Dependencies and builds
+node_modules/
+.next/
+dist/
+build/
+target/
+.cache/
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Secrets & Configs
+.env
+.env.*
+*.pem
+*.key
+
+# Large binaries & model weights (>50MB)
+*.pth
+*.pt
+*.bin
+*.pkl
+*.onnx
+*.h5
+*.tflite
+*.weights
+*.zip
+*.tar
+*.tar.gz
+*.iso
+*.exe
+*.dll
+*.so
+/content_bank/bilingual/hindi_versions/ssc-cgl-2022-tier-1-all-40-shifts-papers-hindi.pdf
+/content_bank/ssc/english/ssc-cgl-2022-tier-1-all-40-shifts-papers-english.pdf
+/public/content_bank/bilingual/hindi_versions/ssc-cgl-2022-tier-1-all-40-shifts-papers-hindi.pdf
+/public/content_bank/ssc/english/ssc-cgl-2022-tier-1-all-40-shifts-papers-english.pdf
